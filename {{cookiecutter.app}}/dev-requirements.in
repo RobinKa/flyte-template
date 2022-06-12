@@ -1,0 +1,2 @@
+-c requirements.txt
+typer>=0.4.1
