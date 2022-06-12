@@ -10,7 +10,7 @@ Workflow scripts are in `{{cookiecutter.app}}/`. Run commands with `commands.py`
 
 ## Setup
 
-Run `pip install -r dev-requirements.txt`
+Run `pip install -r requirements.txt -r dev-requirements.txt`
 
 ## Commands
 
