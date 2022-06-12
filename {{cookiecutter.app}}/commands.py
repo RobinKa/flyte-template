@@ -13,8 +13,8 @@ DEFAULT_WORKFLOW = os.getenv(
     "FLYTE_DEFAULT_WORKFLOW", "{{cookiecutter.app}}.workflows.example.my_wf"
 )
 DEFAULT_DOCKER_NAME = os.getenv("FLYTE_DEFAULT_DOCKER_NAME", "{{cookiecutter.app}}")
-DEFAULT_DOCKER_REPOSITORY = os.getenv(
-    "FLYTE_DEFAULT_DOCKER_REPOSITORY", "{{cookiecutter.default_docker_repository}}"
+DEFAULT_DOCKER_REGISTRY = os.getenv(
+    "FLYTE_DEFAULT_DOCKER_REGISTRY", "{{cookiecutter.default_docker_registry}}"
 )
 FLYTE_CONSOLE_URL = os.getenv("FLYTE_CONSOLE_URL", "{{cookiecutter.console_url}}")
 
@@ -33,18 +33,18 @@ def run(command: str, capture: bool = False) -> Optional[str]:
 
 @app.command()
 def build(
-    repository: str = typer.Option(DEFAULT_DOCKER_REPOSITORY, help="Docker repository"),
+    registry: str = typer.Option(DEFAULT_DOCKER_REGISTRY, help="Docker registry"),
     name: str = typer.Option(DEFAULT_DOCKER_NAME, help="Docker image name"),
     version: str = typer.Option(..., help="Docker image and Flyte workflow version"),
     project: str = typer.Option(DEFAULT_PROJECT, help="Flyte project"),
     domain: str = typer.Option(DEFAULT_DOMAIN, help="Flyte domain"),
 ):
     tag = f"{name}:{version}"
-    if repository:
-        tag = f"{repository}/{tag}"
+    if registry:
+        tag = f"{registry}/{tag}"
 
     run(f"docker build -t {tag} .")
-    if repository:
+    if registry:
         run(f"docker push {tag}")
     run(f"pyflyte --config flytekit.config package --image {tag} -f")
     run(
@@ -85,7 +85,7 @@ def execute(
 
 @app.command()
 def build_execute(
-    repository: str = typer.Option(DEFAULT_DOCKER_REPOSITORY, help="Docker repository"),
+    registry: str = typer.Option(DEFAULT_DOCKER_REGISTRY, help="Docker registry"),
     name: str = typer.Option(DEFAULT_DOCKER_NAME, help="Docker image name"),
     version: str = typer.Option(..., help="Docker image and Flyte workflow version"),
     project: str = typer.Option(DEFAULT_PROJECT, help="Flyte project"),
@@ -93,7 +93,7 @@ def build_execute(
     workflow: str = typer.Option(DEFAULT_WORKFLOW, help="Workflow name"),
 ):
     build(
-        repository=repository,
+        registry=registry,
         name=name,
         version=version,
         project=project,

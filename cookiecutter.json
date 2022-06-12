@@ -2,6 +2,6 @@
     "app": "app",
     "default_project": "flytesnacks",
     "default_domain": "development",
-    "default_docker_repository": "localhost:5000",
+    "default_docker_registry": "localhost:5000",
     "console_url": "http://localhost/console"
 }
